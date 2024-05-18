@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحليل المشاعر لتقيمات المطاعم باللغة العربية</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>تحليل المشاعر لتقيمات المطاعم باللغة العربية</h1>
+        <div class="input-section">
+            <textarea id="review" placeholder="أدخل تقييماً لمطعم باللغة العربية"></textarea>
+            <button id="analyze-btn">تحليل المشاعر</button>
+        </div>
+        <div class="output-section">
+            <h2>النتيجة:</h2>
+            <div id="result">--</div>
+        </div>
+        <div class="examples">
+            <h2>أمثلة:</h2>
+            <ul>
+                <li>كانت تجربتي في هذا المطعم رائعة والطعام كان لذيذاً للغاية</li>
+                <li>المطعم يجنن والاكل تحفة</li>
+                <li>المطعم ما عجبني، الطعم مو حلو والخدمة كانت سيئة جداً، والموظفين ما كانوا محترمين. الأسعار غالية مقارنة بالجودة. ما بنصح فيه.</li>
+                <li>الطعام لا يستحق الثمن المدفوع، جودة سيئة للغاية.</li>
+                <li>الاكل كان جميل جدا والناس هناك محترمه جدا,</li>
+                <li>الأكل وحش والخدمة سيئة، مش هرجع تاني للمطعم ده.</li>
+                <li>المطعم وايد حلو وأكلهم طيب بشكل مو طبيعي! الخدمة عندهم ممتازة والأجواء جداً مريحة. بالتأكيد راح أزورهم مرة ثانية وأنصح الكل يجربهم!</li>
+                <li>تجربتي في هذا المطعم كانت مخيبة للآمال. الأطعمة كانت جافة ومُضيعة للوقت، وخدمة العملاء كانت بطيئة ولا تلبي التوقعات. بالإضافة إلى ذلك، الأسعار مبالغ فيها مقارنة بجودة الطعام المقدمة. لن أعيد زيارة هذا المكان مرة أخرى.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        document.getElementById('analyze-btn').addEventListener('click', async () => {
+            const review = document.getElementById('review').value;
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ review: review })
+            });
+            const result = await response.json();
+            const formattedResult = Object.entries(result).map(([key, value]) => `${key} : ${value}`).join('<br>');
+            document.getElementById('result').innerHTML = formattedResult;
+        });
+    </script>
+</body>
+</html>
